@@ -156,7 +156,7 @@ class NewPost(MainHandler):
         content = self.request.get('content')
 
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content)
+            p = PostDB(parent = blog_key(), subject = subject, content = content)
             p.put()
             self.redirect('/blog')
         else:
@@ -167,10 +167,9 @@ class Signup(MainHandler):
 	USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 	PASS_RE = re.compile(r"^.{3,20}$")
 	EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
-	username = ""
-	email = ""
-	password = ""
-	verify = ""
+	username = ''
+	email = ''
+	password = ''
 
 	def valid_username(self, username):
 		return username and self.USER_RE.match(username)
@@ -186,25 +185,25 @@ class Signup(MainHandler):
 
 	def post(self):
 		have_error = False
-		username = self.request.get('username')		
-		password = self.request.get('password')
+		self.username = self.request.get('username')		
+		self.password = self.request.get('password')
 		verify = self.request.get('verify')
-		email = self.request.get('email')
+		self.email = self.request.get('email')
 		
-		params = dict(username = username, email = email)
+		params = dict(username = self.username, email = self.email)
 		
-		if not self.valid_username(username):
+		if not self.valid_username(self.username):
 			params['error_username'] = "That's not a valid username."
 			have_error = True
 		
-		if not self.valid_password(password):
+		if not self.valid_password(self.password):
 			params['error_password'] = "That wasn't a valid password."
 			have_error = True
-		elif password !=verify:
+		elif self.password !=verify:
 			params['error_verify'] = "Your passwords didn't match."
 			have_error = True
 		
-		if not self.valid_email(email):
+		if not self.valid_email(self.email):
 			params['error_email'] = "That's not a valid email."
 			have_error = True
 

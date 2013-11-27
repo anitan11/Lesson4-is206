@@ -131,13 +131,12 @@ class Blog(MainHandler):
         self.render('front.html', posts = posts)
 
 class Post(MainHandler):
-	def get(self, post_id):
+	def get(self):
 		key = self.request.get('id')
 		post = db.get(key)
 		
 		if not post:
 			self.redirect('/blog')
-
 
 		return self.render("permalink.html", post = post)
 
